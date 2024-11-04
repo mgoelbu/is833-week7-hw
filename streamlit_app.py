@@ -13,20 +13,14 @@ st.title("Airline Experience Feedback")
 user_feedback = st.text_input("Tell us about your recent travel experience", "")
 
 # Template to classify feedback type
-classification_template = """
-**Task:** Please analyze the following customer feedback and classify it into one of the three categories below:
+classification_template = """Classify the feedback into one of the following categories:
+1. "negative_airline" if the feedback is negative and specifically related to services provided by the airline (e.g., lost luggage, bad food, rude staff, delayed baggage).
+2. "negative_external" if the feedback is negative but due to reasons beyond the airline's control (e.g., weather delay, security checkpoint delay, airport infrastructure issues).
+3. "positive" if the feedback is positive.
 
-1. **negative_airline**: The feedback is negative and directly relates to services provided by the airline. Examples include lost luggage, unsatisfactory in-flight meals, rude or unhelpful staff, or delays caused by airline operations (e.g., delayed baggage handling).
+Please respond with only one word: "negative_airline", "negative_other", or "positive".
 
-2. **negative_external**: The feedback is negative but pertains to issues beyond the airline's control. This covers situations like delays due to adverse weather conditions, long waits at security checkpoints, or problems with airport facilities and infrastructure.
-
-3. **positive**: The feedback is positive, reflecting satisfaction or praise regarding any aspect of the travel experience.
-
-**Your goal is to assign the most appropriate category to the feedback.**
-
-Please respond with only one word: "negative_airline", "negative_external", or "positive".
-
-**Feedback:**
+Feedback:
 {feedback}
 """
 
