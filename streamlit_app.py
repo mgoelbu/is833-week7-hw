@@ -36,7 +36,7 @@ classification_chain = LLMChain(llm=llm, prompt=classification_prompt)
 
 # Manually define the responses
 negative_airline_response = "We apologize for the inconvenience caused by our services. Our customer service team will contact you shortly."
-negative_other_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding. Please continue to travel with us!"
+negative_external_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding. Please continue to travel with us!"
 positive_response = "Thank you for your positive feedback! We're glad you had a great experience with us."
 
 # Run the chain if user feedback is provided
