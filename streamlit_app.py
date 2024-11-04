@@ -10,12 +10,12 @@ llm = ChatOpenAI(openai_api_key=st.secrets["MyOpenAIKey"], model="gpt-4o-mini")
 st.title("Airline Experience Feedback")
 
 # User feedback input
-user_feedback = st.text_input("Tell us about your recent travel experience", "")
+user_feedback = st.text_input("Share with us your experience of the latest trip.", "")
 
 # Template to classify feedback type
 classification_template = """Classify the feedback into one of the following categories:
 1. "negative_airline" if the feedback is negative and specifically related to services provided by the airline (e.g., lost luggage, bad food, rude staff, delayed baggage).
-2. "negative_external" if the feedback is negative but due to reasons beyond the airline's control (e.g., weather delay, security checkpoint delay, airport infrastructure issues).
+2. "negative_other" if the feedback is negative but due to reasons beyond the airline's control (e.g., weather delay, security checkpoint delay, airport infrastructure issues).
 3. "positive" if the feedback is positive.
 
 Please respond with only one word: "negative_airline", "negative_other", or "positive".
@@ -30,7 +30,7 @@ classification_chain = LLMChain(llm=llm, prompt=classification_prompt)
 
 # Manually define the responses
 negative_airline_response = "We apologize for the inconvenience caused by our services. Our customer service team will contact you shortly."
-negative_external_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding. Please continue to travel with us!"
+negative_other_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding."
 positive_response = "Thank you for your positive feedback! We're glad you had a great experience with us."
 
 # Run the chain if user feedback is provided
