@@ -1,10 +1,10 @@
 import streamlit as st
 from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+from langchain.chains import LLMChain, RoutingChain
 from langchain.chat_models import ChatOpenAI
 
 # Initialize ChatOpenAI with the API key
-llm = ChatOpenAI(openai_api_key=st.secrets["MyOpenAIKey"], model="gpt-4o-mini")
+llm = ChatOpenAI(openai_api_key=st.secrets["MyOpenAIKey"], model="gpt-4")
 
 # Streamlit setup
 st.title("Airline Experience Feedback")
@@ -33,22 +33,22 @@ negative_airline_response = "We apologize for the inconvenience caused by our se
 negative_other_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding."
 positive_response = "Thank you for your positive feedback! We're glad you had a great experience with us."
 
+# RoutingChain Setup
+responses = {
+    "negative_airline": negative_airline_response,
+    "negative_other": negative_other_response,
+    "positive": positive_response
+}
+
 # Run the chain if user feedback is provided
 if user_feedback:
     try:
         # Get classification result
-        classification_result = classification_chain.run({"feedback": user_feedback})
-        st.write("Classification result:", classification_result)
-
+        classification_result = classification_chain.run({"feedback": user_feedback}).strip().lower()
+        
         # Display the appropriate response based on classification
-        if classification_result == "negative_airline":
-            st.write(negative_airline_response)
-        elif classification_result == "negative_other":
-            st.write(negative_other_response)
-        elif classification_result == "positive":
-            st.write(positive_response)
-        else:
-            st.write("Unexpected classification result:", classification_result)  # Fallback for unexpected results
-            
+        response_text = responses.get(classification_result, "We're sorry, but we couldn't determine the nature of your feedback.")
+        st.write(response_text)
+        
     except Exception as e:
         st.error(f"An error occurred while processing your feedback: {e}")
