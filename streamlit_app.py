@@ -4,50 +4,57 @@ from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 
 # Initialize ChatOpenAI with the API key
-llm = ChatOpenAI(openai_api_key=st.secrets["MyOpenAIKey"], model="gpt-4o-mini")
+llm = ChatOpenAI(openai_api_key=st.secrets["MyOpenAIKey"], model="gpt-4")
 
 # Streamlit setup
-st.title("Travel Experience Feedback")
+st.title("Airline Experience Feedback")
 
 # User feedback input
-user_experience = st.text_input("Tell us about your recent travel experience.", "")
+user_feedback = st.text_input("Tell us about your recent travel experience", "")
 
-# Template to categorize experience type
-experience_template = """Categorize the experience into one of the following types:
-1. "airline_issue" if the experience was negative and due to something the airline controlled (e.g., lost baggage, poor customer service, delayed flight).
-2. "external_issue" if the experience was negative but due to factors outside the airline's control (e.g., bad weather, security delays).
-3. "positive_experience" if the feedback is positive.
+# Enhanced template to classify feedback type
+classification_template = """
+**Task:** Please analyze the following customer feedback and classify it into one of the three categories below:
 
-Please respond with only one word: "airline_issue", "external_issue", or "positive_experience".
+1. **negative_airline**: The feedback is negative and directly relates to services provided by the airline. Examples include lost luggage, unsatisfactory in-flight meals, rude or unhelpful staff, or delays caused by airline operations (e.g., delayed baggage handling).
 
-Experience:
-{experience}
+2. **negative_external**: The feedback is negative but pertains to issues beyond the airline's control. This covers situations like delays due to adverse weather conditions, long waits at security checkpoints, or problems with airport facilities and infrastructure.
+
+3. **positive**: The feedback is positive, reflecting satisfaction or praise regarding any aspect of the travel experience.
+
+**Your goal is to assign the most appropriate category to the feedback.**
+
+Please respond with only one word: "negative_airline", "negative_external", or "positive".
+
+**Feedback:**
+{feedback}
 """
 
 # Classification chain
-experience_prompt = PromptTemplate(input_variables=["experience"], template=experience_template)
-experience_chain = LLMChain(llm=llm, prompt=experience_prompt)
+classification_prompt = PromptTemplate(input_variables=["feedback"], template=classification_template)
+classification_chain = LLMChain(llm=llm, prompt=classification_prompt)
 
-# Define response messages
-airline_issue_response = "We apologize for the inconvenience caused by our services. Our support team will reach out to you shortly."
-external_issue_response = "We're sorry for the inconvenience, but this issue was beyond our control. Thank you for your understanding."
-positive_experience_response = "Thank you for your feedback! We’re delighted that you had a great experience with us."
+# Manually define the responses
+negative_airline_response = "We apologize for the inconvenience caused by our services. Our customer service team will contact you shortly."
+negative_external_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding and hope to serve you better in the future."
+positive_response = "Thank you for your positive feedback! We're glad you had a great experience with us."
 
-# Run the chain if user experience is provided
-if user_experience:
+# Run the chain if user feedback is provided
+if user_feedback:
     try:
-        # Get experience categorization result
-        experience_type = experience_chain.run({"experience": user_experience})
-
-        # Display the appropriate response based on experience type
-        if experience_type == "airline_issue":
-            st.write(airline_issue_response)
-        elif experience_type == "external_issue":
-            st.write(external_issue_response)
-        elif experience_type == "positive_experience":
-            st.write(positive_experience_response)
+        # Get classification result
+        classification_result = classification_chain.run({"feedback": user_feedback}).strip().lower()
+        st.write("Classification result:", classification_result)
+    
+        # Display the appropriate response based on classification
+        if classification_result == "negative_airline":
+            st.write(negative_airline_response)
+        elif classification_result == "negative_external":
+            st.write(negative_external_response)
+        elif classification_result == "positive":
+            st.write(positive_response)
         else:
-            st.write("Thank you for your feedback.")  # Fallback for unexpected results
-            
+            st.write("Unexpected classification result:", classification_result)  # Fallback for unexpected results
+                
     except Exception as e:
-        st.error(f"An error occurred while processing your experience: {e}")
+        st.error(f"An error occurred while processing your feedback: {e}")
