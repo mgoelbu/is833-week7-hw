@@ -29,9 +29,9 @@ classification_prompt = PromptTemplate(input_variables=["feedback"], template=cl
 classification_chain = LLMChain(llm=llm, prompt=classification_prompt)
 
 # Manually define the responses
-negative_airline_response = "We apologize for the inconvenience caused by our services. Our customer service team will contact you shortly."
-negative_other_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding."
-positive_response = "Thank you for your positive feedback! We're glad you had a great experience with us."
+negative_airline_response = "We apologize for the inconvenience caused by our services. Our customer service team will contact you shortly. Thank you for your patience."
+negative_other_response = "We're sorry for the inconvenience. However, the situation was beyond our control. We appreciate your understanding. Please travel with us again!"
+positive_response = "Thank you for your positive feedback! We're glad you had a great experience with us. Happy travelling!"
 
 # Run the chain if user feedback is provided
 if user_feedback:
