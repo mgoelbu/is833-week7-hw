@@ -10,7 +10,7 @@ llm = ChatOpenAI(openai_api_key=st.secrets["MyOpenAIKey"], model="gpt-4o-mini")
 st.title("Airline Experience Feedback")
 
 # User feedback input
-user_feedback = st.text_input("Share with us your experience of the latest trip.", "")
+user_feedback = st.text_input("Tell us about your recent travel experience", "")
 
 # Template to classify feedback type
 classification_template = """Classify the feedback into one of the following categories:
